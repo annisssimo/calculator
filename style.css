@@ -22,12 +22,36 @@ h1 {
 .box {
     background-color: black;
     width: 340px;
-    height: 560px;
+    height: 600px;
     border-radius: 40px;
+    box-shadow: 10px 10px 8px rgb(30, 29, 29);
 }
 
 .screen {
-    height: 160px;
+    height: 200px;
+    padding: 20px 30px 0px 30px;
+}
+
+.calculation,
+.res {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: flex-end;
+    color: aliceblue;
+    text-align: right;
+}
+
+.calculation {
+    height: 120px;
+    color: rgb(210, 214, 216);
+    word-wrap: break-word;
+    overflow: hidden;
+    max-height: 120px;
+}
+
+.res {
+    font-size: 50px;
 }
 
 .buttons {
@@ -42,7 +66,11 @@ button {
     border: none;
     font-weight: 500;
     font-size: 24px;
-    color:aliceblue
+    color:aliceblue;
+}
+
+button:hover {
+    filter: brightness(120%);
 }
 
 .round {
@@ -68,4 +96,10 @@ button {
 
 .dark-gray {
     background-color: rgb(36, 34, 34);
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        display: none;
+    }
 }
