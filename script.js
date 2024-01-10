@@ -24,7 +24,7 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    if (b === '0') {
+    if (b === 0) {
         return 'балуешься?';
     }
 
@@ -137,7 +137,13 @@ function handleDigitKey(key) {
 }
 
 function handleActionKey(key) {
-    operator = key;
+    if (operator === '') {
+        operator = key;
+    }
+    else {
+        operator = key;
+        handleEqualsKey();
+    }
 }
 
 function handleEqualsKey() {
@@ -202,5 +208,8 @@ buttons.addEventListener('click', (event) => {
         return;
     }
 
-    
+    if(key === 'C') {
+
+    }
+
 });
