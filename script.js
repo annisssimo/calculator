@@ -143,9 +143,12 @@ function handleActionKey(key) {
                               </p>`;
         return;
     }
-    else if (operator !== ''){
-        handleEqualsKey();
+    else if (operator !== '' && secondNumber === ''){
         operator = key;
+    }
+    else if (firstNumber !== '' && operator !== '' && secondNumber !== '') {
+        handleEqualsKey();
+        calculateСontinuously(key);
     }
 }
 
@@ -212,10 +215,6 @@ function handleCKey() {
 
     function handleEvent(key) {
     if (resultDisplay.textContent === 'Error') return clearCalculator();
-    
-    if (finish && action.includes(key)) {
-        calculateСontinuously(key);
-    }
 
     if (digit.includes(key)) {
         handleDigitKey(key);
