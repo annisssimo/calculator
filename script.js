@@ -137,12 +137,19 @@ function handleDigitKey(key) {
 }
 
 function handleActionKey(key) {
-    if (operator === '') {
+    if (firstNumber !== '' && operator === '') {
         operator = key;
     }
-    else {
-        operator = key;
+    else if (firstNumber === '' && operator === '') {
+        if(key === '-') {
+            firstNumber = 0;
+            operator = '-';
+        }
+        return;
+    }
+    else if (operator !== ''){
         handleEqualsKey();
+        operator = key;
     }
 }
 
@@ -174,6 +181,12 @@ function handlePlusMinusKey() {
         updateExprDisplay(result);
         result = '';
         finish = false;
+    }
+}
+
+function handleCKey() {
+    if (firstNumber !== '' && operator === '' && secondNumber === '' && !finish) {
+        firstNumber.slice(0, -1);
     }
 }
 
@@ -209,7 +222,8 @@ buttons.addEventListener('click', (event) => {
     }
 
     if(key === 'C') {
-
+        handleCKey();
+        return;
     }
 
 });
