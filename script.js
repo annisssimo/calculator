@@ -28,7 +28,11 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-        warning.innerHTML = "You can't divide by zero!";
+        warning.innerHTML = `<p>You can't divide by zero!
+                              <br>
+                              Click the <b>AC</b> button and try again...
+                              </p>`;
+        firstNumber = 0;
         return 'Error';
     }
 
@@ -200,6 +204,8 @@ function handleCKey() {
 
 buttons.addEventListener('click', (event) => {
     if (!event.target.classList.contains('btn')) return;
+    if (resultDisplay.textContent === 'Error') return clearCalculator();
+    
     const key = event.target.innerText;
 
     updateExpressionDisplay(key);
