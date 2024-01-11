@@ -193,7 +193,7 @@ function handlePlusMinusKey() {
 
 function handleCKey() {
     if (firstNumber !== '' && operator === '' && secondNumber === '' && !finish) {
-        firstNumber = Number(firstNumber.toString().slice(0, -1));
+        firstNumber = firstNumber.toString().slice(0, -1);
         updateExpressionDisplay();
     }
     else if ((firstNumber !== '' && operator !== '' && secondNumber === '' && !finish)) {
@@ -201,11 +201,11 @@ function handleCKey() {
         updateExpressionDisplay();
     }
     else if (firstNumber !== '' && operator !== '' && secondNumber !== '' && !finish) {
-        secondNumber = Number(secondNumber.toString().slice(0, -1));
+        secondNumber = secondNumber.toString().slice(0, -1);
         updateExpressionDisplay();
     }
     else if (finish) {
-        result = Number(result.toString().slice(0, -1));
+        result = result.toString().slice(0, -1);
         updateResultDisplay(result);
     }
 }
