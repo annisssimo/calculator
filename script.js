@@ -10,6 +10,9 @@ const action = ['-', '+', '×', '÷'];
 const calculationDisplay = document.querySelector('.calculation');
 const resultDisplay = document.querySelector('.res');
 const buttons = document.querySelector('.buttons');
+const warning = document.querySelector('.warning');
+const originalWarningText = document.querySelector('.warning').innerHTML;
+
 
 function add(a, b) {
     return (+a) + (+b);
@@ -25,7 +28,8 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b === 0) {
-        return 'балуешься?';
+        warning.innerHTML = "You can't divide by zero!";
+        return 'Error';
     }
 
     let res = a / b;
@@ -59,9 +63,10 @@ function clearCalculator() {
     finish = false;
     calculationDisplay.textContent = '';
     resultDisplay.textContent = '0';
+    warning.innerHTML = originalWarningText;
 }
 
-function updateExprDisplay(value) {
+function updateExpressionDisplay(value) {
     switch (value) {
         case 'C':
             calculationDisplay.textContent = calculationDisplay.textContent.slice(0, -1);
@@ -141,10 +146,8 @@ function handleActionKey(key) {
         operator = key;
     }
     else if (firstNumber === '' && operator === '') {
-        if(key === '-') {
-            firstNumber = 0;
-            operator = '-';
-        }
+        calculationDisplay.textContent = '';
+        warning.textContent = 'Start with a number!';
         return;
     }
     else if (operator !== ''){
@@ -157,6 +160,11 @@ function handleEqualsKey() {
     if (firstNumber !== '' && operator === '' && secondNumber === '') {
         result = firstNumber;
         updateResultDisplay(result);
+    }
+    else if (firstNumber === '' && operator === '') {
+        calculationDisplay.textContent = '';
+        warning.textContent = 'Start with a number!';
+        return;
     } else {
         result = operate(firstNumber, operator, secondNumber);
         updateResultDisplay(result);
@@ -168,7 +176,7 @@ function handlePlusMinusKey() {
     if (firstNumber !== '') {
         firstNumber = firstNumber * -1;
         updateResultDisplay(firstNumber);
-        updateExprDisplay('+/-');
+        updateExpressionDisplay('+/-');
     }
 
     if (firstNumber !== '' && secondNumber !== '' && finish) {
@@ -178,7 +186,7 @@ function handlePlusMinusKey() {
         secondNumber = '';
         calculationDisplay.textContent = '';
         updateResultDisplay(result);
-        updateExprDisplay(result);
+        updateExpressionDisplay(result);
         result = '';
         finish = false;
     }
@@ -194,7 +202,7 @@ buttons.addEventListener('click', (event) => {
     if (!event.target.classList.contains('btn')) return;
     const key = event.target.innerText;
 
-    updateExprDisplay(key);
+    updateExpressionDisplay(key);
 
     if (finish && action.includes(key)) {
         calculateСontinuously(key);

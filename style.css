@@ -19,6 +19,12 @@ h1 {
     font-size: 70px;
 }
 
+.warning {
+    color: orange;
+    height: 100px;
+    overflow: auto;
+}
+
 .box {
     background-color: black;
     width: 340px;

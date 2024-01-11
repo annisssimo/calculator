@@ -204,7 +204,7 @@ function collectData(e) {
             }
             break;
         case 'Shift':
-            // This is will allow shift to be used for '+ * ^ !' without triggering the default warning for keyboard shortcuts.
+            // This will allow shift to be used for '+ * ^ !' without triggering the default warning for keyboard shortcuts.
             break;
         default:
             warning.innerHTML = `
