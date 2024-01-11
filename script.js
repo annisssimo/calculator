@@ -5,7 +5,7 @@ let result = '';
 let finish = false;
 
 const digit = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
-const action = ['-', '+', '×', '÷'];
+const action = ['-', '+', '×', '÷', '*', '/'];
 
 const calculationDisplay = document.querySelector('.calculation');
 const resultDisplay = document.querySelector('.res');
@@ -46,8 +46,10 @@ function operate(number1, sign, number2) {
 
     switch (sign) {
         case '÷':
+        case '/':
             return divide(number1, number2);
         case '×':
+        case '*':
             return multiply(number1, number2);
         case '-':
             return subtract(number1, number2);
@@ -208,52 +210,53 @@ function handleCKey() {
     }
 }
 
-buttons.addEventListener('click', (event) => {
-    if (!event.target.classList.contains('btn')) return;
+    function handleEvent(key) {
     if (resultDisplay.textContent === 'Error') return clearCalculator();
     
-    const key = event.target.innerText;
-
     if (finish && action.includes(key)) {
         calculateСontinuously(key);
-        return;
     }
 
     if (digit.includes(key)) {
         handleDigitKey(key);
         updateExpressionDisplay();
         console.log(firstNumber, operator, secondNumber, finish);
-        return;
     }
 
     if (action.includes(key)) {
         handleActionKey(key);
         updateExpressionDisplay();
         console.log(firstNumber, operator, secondNumber, finish);
-        return;
     }
 
-    if (key === '=') {
+    if (key === '=' || key === 'Enter') {
         handleEqualsKey();
         console.log(firstNumber, operator, secondNumber, finish);
-        return;
     }
 
-    if (key === '+/-') {
+    if (key === '+/-' || key === 'ArrowUp' || key === 'ArrowDown') {
         handlePlusMinusKey();
         updateExpressionDisplay();
         console.log(firstNumber, operator, secondNumber, finish);
-        return;
     }
 
-    if(key === 'C') {
+    if(key === 'C' || key === 'Backspace') {
         handleCKey();
-        return;
     }
 
-    if(key === 'AC') {
+    if(key === 'AC' || key === 'Escape') {
         clearCalculator();
         console.log(firstNumber, operator, secondNumber, finish);
-        return;
     }
+}
+
+buttons.addEventListener('click', function (event) {
+    if (event.target.classList.contains('btn')) {
+        handleEvent(event.target.innerText);
+    }
+});
+
+document.addEventListener('keydown', function (event) {
+    const key = event.key;
+    handleEvent(key);
 });
