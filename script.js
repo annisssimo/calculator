@@ -30,15 +30,14 @@ function divide(a, b) {
     if (b === 0) {
         warning.innerHTML = `<p>You can't divide by zero!
                               <br>
-                              Click the <b>AC</b> button and try again...
+                              Click the <b style = "color: white">AC</b> button and try again...
                               </p>`;
         firstNumber = 0;
         return 'Error';
     }
 
     let res = a / b;
-
-    return res.toFixed(5).replace(/\.?0+$/, '');
+    return res;
 }
 
 function operate(number1, sign, number2) {
@@ -70,52 +69,37 @@ function clearCalculator() {
     warning.innerHTML = originalWarningText;
 }
 
-function updateExpressionDisplay(value) {
-    switch (value) {
-        case 'C':
-            calculationDisplay.textContent = calculationDisplay.textContent.slice(0, -1);
-            break;
-        case 'AC':
-            clearCalculator();
-            break;
-        case '=':
-            calculationDisplay.textContent = `${firstNumber} ${operator} ${secondNumber} =`;
-            break;
-        case '+/-':
-            calculationDisplay.textContent = firstNumber + ' ' + operator + ' ' + secondNumber;
-            break;
-        default:
-            handleDefaultCase(value);
+function updateExpressionDisplay() {
+    let expression = '';
+
+    if (firstNumber !== '') {
+        expression += firstNumber;
     }
+
+    if (operator !== '') {
+        expression += ` ${operator} `;
+    }
+
+    if (secondNumber !== '') {
+        expression += `${secondNumber}`;
+    }
+
+    calculationDisplay.textContent = expression;
 }
 
-function handleDefaultCase(value) {
-    const lastChar = calculationDisplay.textContent.slice(-1);
-    if (value === '.' && lastChar === '.') {
-        return;
-    }
-    calculationDisplay.textContent += value;
-}
 
 function updateResultDisplay(res) {
     const maxLength = 9;
-    let formattedResult;
 
-    if (res.toString().includes('.')) {
-        const integerPart = res.toString().split('.')[0];
-        const decimalPart = res.toString().split('.')[1].slice(0, maxLength - integerPart.length);
-
-        formattedResult = parseFloat(`${integerPart}.${decimalPart}`);
-    } else {
-        formattedResult = res;
+    if (res.toString().length > maxLength) {
+        warning.innerHTML = `Scroll through the calculator screen <br>to see the full result`;
     }
-
-    resultDisplay.innerText = formattedResult;
+    resultDisplay.innerText = res;
 }
 
 function calculateСontinuously(key) {
     operator = key;
-    calculationDisplay.textContent = result + operator;
+    calculationDisplay.textContent = `${result} ${operator}`;
     finish = false;
     firstNumber = result;
     secondNumber = '';
@@ -146,12 +130,15 @@ function handleDigitKey(key) {
 }
 
 function handleActionKey(key) {
-    if (firstNumber !== '' && operator === '') {
+    if ((firstNumber !== '' && operator === '') || (firstNumber !== '' && operator !== '' && secondNumber === '' && !finish)) {
         operator = key;
     }
     else if (firstNumber === '' && operator === '') {
         calculationDisplay.textContent = '';
-        warning.textContent = 'Start with a number!';
+        warning.innerHTML = `<p>Start with a number.<br>
+                              If you need negative one, click <br>
+                              the <b style = "color: white">+/-</b> button
+                              </p>`;
         return;
     }
     else if (operator !== ''){
@@ -177,28 +164,47 @@ function handleEqualsKey() {
 }
 
 function handlePlusMinusKey() {
-    if (firstNumber !== '') {
+    if (firstNumber !== '' && secondNumber === '') {
         firstNumber = firstNumber * -1;
-        updateResultDisplay(firstNumber);
-        updateExpressionDisplay('+/-');
     }
 
-    if (firstNumber !== '' && secondNumber !== '' && finish) {
+    else if (firstNumber !== '' && secondNumber !== '' && finish) {
         result = result * -1;
         firstNumber = result;
         operator = '';
         secondNumber = '';
-        calculationDisplay.textContent = '';
-        updateResultDisplay(result);
-        updateExpressionDisplay(result);
         result = '';
+        updateResultDisplay(0);
         finish = false;
+    }
+    else if (firstNumber !== '' && operator !== '' && secondNumber !== '') {
+        secondNumber = secondNumber * -1;
+    }
+    else if (firstNumber === '' && operator === '') {
+        calculationDisplay.textContent = '';
+        warning.innerHTML = `<p>Start with a number.<br>
+                              If you need negative one, click <br>
+                              the number, then <b style = "color: white">+/-</b> button
+                              </p>`;
     }
 }
 
 function handleCKey() {
     if (firstNumber !== '' && operator === '' && secondNumber === '' && !finish) {
-        firstNumber.slice(0, -1);
+        firstNumber = Number(firstNumber.toString().slice(0, -1));
+        updateExpressionDisplay();
+    }
+    else if ((firstNumber !== '' && operator !== '' && secondNumber === '' && !finish)) {
+        operator = '';
+        updateExpressionDisplay();
+    }
+    else if (firstNumber !== '' && operator !== '' && secondNumber !== '' && !finish) {
+        secondNumber = Number(secondNumber.toString().slice(0, -1));
+        updateExpressionDisplay();
+    }
+    else if (finish) {
+        result = Number(result.toString().slice(0, -1));
+        updateResultDisplay(result);
     }
 }
 
@@ -208,8 +214,6 @@ buttons.addEventListener('click', (event) => {
     
     const key = event.target.innerText;
 
-    updateExpressionDisplay(key);
-
     if (finish && action.includes(key)) {
         calculateСontinuously(key);
         return;
@@ -217,21 +221,28 @@ buttons.addEventListener('click', (event) => {
 
     if (digit.includes(key)) {
         handleDigitKey(key);
+        updateExpressionDisplay();
+        console.log(firstNumber, operator, secondNumber, finish);
         return;
     }
 
     if (action.includes(key)) {
         handleActionKey(key);
+        updateExpressionDisplay();
+        console.log(firstNumber, operator, secondNumber, finish);
         return;
     }
 
     if (key === '=') {
         handleEqualsKey();
+        console.log(firstNumber, operator, secondNumber, finish);
         return;
     }
 
     if (key === '+/-') {
         handlePlusMinusKey();
+        updateExpressionDisplay();
+        console.log(firstNumber, operator, secondNumber, finish);
         return;
     }
 
@@ -240,4 +251,9 @@ buttons.addEventListener('click', (event) => {
         return;
     }
 
+    if(key === 'AC') {
+        clearCalculator();
+        console.log(firstNumber, operator, secondNumber, finish);
+        return;
+    }
 });

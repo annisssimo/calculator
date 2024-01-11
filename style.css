@@ -40,24 +40,23 @@ h1 {
 
 .calculation,
 .res {
-    display: flex;
-
-    align-items: flex-end;
-    justify-content: flex-end;
-    color: aliceblue;
     text-align: right;
 }
 
 .calculation {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
     height: 120px;
     color: rgb(210, 214, 216);
     word-wrap: break-word;
-    overflow: hidden;
     max-height: 120px;
 }
 
 .res {
+    color: aliceblue;
     font-size: 50px;
+    overflow-x: auto;
 }
 
 .buttons {
